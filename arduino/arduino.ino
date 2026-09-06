@@ -1,118 +1,30 @@
 /*
-   Show OGS game records on Inkplate 4 TEMPERE e-ink display.
+   Show OGS game records on Inkplate 4 TEMPERA e-ink display.
 */
 
 #include "Inkplate.h"
 #include "config.h"
-#include "DisplayManager.h"
+#include "display.h"
+#include "game_order.h"
 #include "games_data.h"
+#include "screenshot.h"
 #include "../logic/baduk_engine.h"
-#include <mbedtls/base64.h>
 
 Inkplate display(INKPLATE_1BIT);
-BadukState badukState;
-unsigned long lastMoveUpdate = 0;
-bool gameActive = true;
-uint16_t gameOrder[GAME_COUNT];
-uint16_t gameOrderIndex = 0;
+BadukState baduk_state;
+DisplayState display_state;
+GameOrder game_order;
+unsigned long last_move_update = 0;
+bool game_active = true;
 
-DisplayManager displayManager(display);
-
-void shuffle_games() {
-    uint16_t i;
-
-    for (i = 0; i < GAME_COUNT; i++) {
-        gameOrder[i] = i;
-    }
-
-    if (!RANDOM_GAME_ORDER) {
-        return;
-    }
-
-    for (i = GAME_COUNT - 1; i > 0; i--) {
-        uint16_t j = random(i + 1);
-        uint16_t tmp = gameOrder[i];
-
-        gameOrder[i] = gameOrder[j];
-        gameOrder[j] = tmp;
-    }
-}
-
-void load_ordered_game(uint16_t orderIndex) {
-    uint16_t gameIndex = gameOrder[orderIndex];
-
-    baduk_load_game(&badukState, GAMES, GAME_COUNT, gameIndex);
-}
-
-void write_base64(const uint8_t* data, size_t dataLen) {
-    const size_t inputChunkSize = 45;
-    uint8_t encoded[65];
-    size_t offset;
-
-    for (offset = 0; offset < dataLen; offset += inputChunkSize) {
-        size_t chunkLen = dataLen - offset;
-        size_t encodedLen = 0;
-        int result;
-
-        if (chunkLen > inputChunkSize) {
-            chunkLen = inputChunkSize;
-        }
-
-        result = mbedtls_base64_encode(
-            encoded,
-            sizeof(encoded),
-            &encodedLen,
-            data + offset,
-            chunkLen
-        );
-
-        if (result != 0) {
-            Serial.println("BASE64_ERROR");
-            return;
-        }
-
-        encoded[encodedLen] = '\0';
-        Serial.println((char*)encoded);
-    }
-}
-
-void dump_screenshot() {
-    size_t size = E_INK_WIDTH * E_INK_HEIGHT / 8;
-
-    Serial.println("SCREENSHOT_BEGIN");
-    Serial.print("WIDTH ");
-    Serial.println(E_INK_WIDTH);
-    Serial.print("HEIGHT ");
-    Serial.println(E_INK_HEIGHT);
-    Serial.println("FORMAT INKPLATE_1BIT_LSB_FIRST_BLACK_1");
-    Serial.print("BYTES ");
-    Serial.println(size);
-    Serial.println("DATA_BEGIN");
-
-    write_base64(display._partial, size);
-
-    Serial.println("DATA_END");
-    Serial.println("SCREENSHOT_END");
-    Serial.flush();
-}
-
-void check_serial_commands() {
-    int ch;
-
-    if (!Serial.available()) {
-        return;
-    }
-
-    ch = Serial.read();
-
-    if (ch == 's' || ch == 'S') {
-        dump_screenshot();
-    }
+void load_current_game() {
+    baduk_load_game(&baduk_state, GAMES, GAME_COUNT, game_order_current(&game_order));
 }
 
 void setup() {
     Serial.begin(115200);
     display.begin();
+    display_init(&display_state);
     display.setTextColor(BLACK);
 
     // initialize frontlight
@@ -124,58 +36,47 @@ void setup() {
     Serial.println("starting baduk game viewer...");
 
     // initialize state, load first game
-    randomSeed(esp_random());
-    shuffle_games();
-    gameOrderIndex = 0;
-    load_ordered_game(gameOrderIndex);
-    lastMoveUpdate = millis();
+    game_order_init(&game_order);
+    load_current_game();
+    last_move_update = millis();
 
     Serial.print("total games: ");
     Serial.println(GAME_COUNT);
 
     // initial board
-    displayManager.drawAll(&badukState, GAME_COUNT);
-    display.display();
+    display_draw_all(&display, &display_state, &baduk_state, GAME_COUNT);
 }
 
 void loop() {
     unsigned long currentMillis = millis();
 
-    check_serial_commands();
+    screenshot_check_serial(&display);
 
-    if (gameActive && currentMillis - lastMoveUpdate >= MOVE_INTERVAL) {
-        if (!baduk_play_next_move(&badukState, GAMES)) {
+    if (game_active && currentMillis - last_move_update >= MOVE_INTERVAL) {
+        if (!baduk_play_next_move(&baduk_state, GAMES)) {
             Serial.print("invalid move in game ");
-            Serial.print(badukState.game_index);
+            Serial.print(baduk_state.game_index);
             Serial.print(" at move ");
-            Serial.println(badukState.move_index + 1);
-            gameActive = false;
+            Serial.println(baduk_state.move_index + 1);
+            game_active = false;
         }
 
         // is game over?
-        if (badukState.move_index >= badukState.move_count) {
+        if (baduk_state.move_index >= baduk_state.move_count) {
             Serial.println("game finished, moving to next game...");
             delay(5000);  // Pause before next game
 
-            gameOrderIndex++;
-            if (gameOrderIndex >= GAME_COUNT) {
-                if (LOOP_GAMES) {
-                    shuffle_games();
-                    gameOrderIndex = 0;
-                } else {
-                    gameActive = false;
-                }
-            }
-
-            if (gameActive) {
-                load_ordered_game(gameOrderIndex);
+            if (game_order_advance(&game_order)) {
+                load_current_game();
+            } else {
+                game_active = false;
             }
         }
 
         // redraw board with new move
-        displayManager.drawAll(&badukState, GAME_COUNT);
+        display_draw_all(&display, &display_state, &baduk_state, GAME_COUNT);
 
-        lastMoveUpdate = currentMillis;
+        last_move_update = currentMillis;
     }
     delay(100);
 }

@@ -288,6 +288,8 @@ fn compress_games(
     println!("  Estimated data size: {} bytes", estimated_size);
 
     // Generate C header files in output directory
+    std::fs::create_dir_all(output_dir)?;
+
     let games_data_path = format!("{}/games_data.h", output_dir);
     let games_metadata_path = format!("{}/games_metadata.h", output_dir);
 

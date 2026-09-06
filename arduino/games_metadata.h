@@ -1,15 +1,8 @@
 #ifndef GAMES_METADATA_H
 #define GAMES_METADATA_H
 
+#include "game_metadata.h"
 #include "../logic/baduk_platform.h"
-
-struct GameMetadata {
-    const char* date;
-    const char* black_player;
-    const char* white_player;
-    const char* black_rank;
-    const char* white_rank;
-};
 
 // Metadata strings (stored in PROGMEM)
 const char GAME_0_DATE[] PROGMEM = "2017-09-23";

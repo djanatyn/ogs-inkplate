@@ -217,15 +217,8 @@ pub fn generate_metadata_header(
     let mut header = String::new();
     header.push_str("#ifndef GAMES_METADATA_H\n");
     header.push_str("#define GAMES_METADATA_H\n\n");
+    header.push_str("#include \"game_metadata.h\"\n");
     header.push_str("#include \"../logic/baduk_platform.h\"\n\n");
-
-    header.push_str("struct GameMetadata {\n");
-    header.push_str("    const char* date;\n");
-    header.push_str("    const char* black_player;\n");
-    header.push_str("    const char* white_player;\n");
-    header.push_str("    const char* black_rank;\n");
-    header.push_str("    const char* white_rank;\n");
-    header.push_str("};\n\n");
 
     // Generate string constants in PROGMEM
     header.push_str("// Metadata strings (stored in PROGMEM)\n");
