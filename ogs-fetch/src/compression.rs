@@ -32,7 +32,7 @@ pub fn parse_sgf_moves(content: &str, board_size: u32) -> Vec<u16> {
             match prop {
                 Prop::B(mv) | Prop::W(mv) => {
                     // Convert move to our coordinate format and encode
-                    if let Some(encoded) = encode_move_from_lib(&mv, board_size) {
+                    if let Some(encoded) = encode_move_from_lib(mv, board_size) {
                         moves.push(encoded);
                     }
                 }
@@ -99,10 +99,10 @@ fn has_handicap(content: &str) -> bool {
     // Look for HA[n] property where n > 0
     if let Some(start) = content.find("HA[") {
         let start = start + 3;
-        if let Some(end) = content[start..].find(']') {
-            if let Ok(handicap_str) = content[start..start + end].parse::<i32>() {
-                return handicap_str > 0;
-            }
+        if let Some(end) = content[start..].find(']')
+            && let Ok(handicap_str) = content[start..start + end].parse::<i32>()
+        {
+            return handicap_str > 0;
         }
     }
     false
@@ -155,44 +155,44 @@ pub fn compress_games_from_directory(
 
         let path = entry.path();
 
-        if path.extension().and_then(|s| s.to_str()) == Some("sgf") {
-            if let Ok(content) = fs::read_to_string(&path) {
-                // Skip games with handicap stones
-                if has_handicap(&content) {
-                    let filename = path
-                        .file_name()
-                        .and_then(|name| name.to_str())
-                        .unwrap_or("unknown.sgf")
-                        .to_string();
-                    println!("  Skipping handicap game: {}", filename);
-                    continue;
-                }
+        if path.extension().and_then(|s| s.to_str()) == Some("sgf")
+            && let Ok(content) = fs::read_to_string(&path)
+        {
+            // Skip games with handicap stones
+            if has_handicap(&content) {
+                let filename = path
+                    .file_name()
+                    .and_then(|name| name.to_str())
+                    .unwrap_or("unknown.sgf")
+                    .to_string();
+                println!("  Skipping handicap game: {}", filename);
+                continue;
+            }
 
-                let moves = parse_sgf_moves(&content, board_size);
-                if !moves.is_empty() {
-                    let filename = path
-                        .file_name()
-                        .and_then(|name| name.to_str())
-                        .unwrap_or("unknown.sgf")
-                        .to_string();
-                    let metadata = extract_metadata(&content);
-                    games.push(CompressedGame {
-                        moves,
-                        filename,
-                        metadata,
-                    });
-                    file_count += 1;
-                    let game_ref = games.last().unwrap();
-                    println!(
-                        "  Compressed game {} ({} moves) from {} ({} vs {} on {})",
-                        file_count,
-                        game_ref.moves.len(),
-                        game_ref.filename,
-                        game_ref.metadata.black_player,
-                        game_ref.metadata.white_player,
-                        game_ref.metadata.date
-                    );
-                }
+            let moves = parse_sgf_moves(&content, board_size);
+            if !moves.is_empty() {
+                let filename = path
+                    .file_name()
+                    .and_then(|name| name.to_str())
+                    .unwrap_or("unknown.sgf")
+                    .to_string();
+                let metadata = extract_metadata(&content);
+                games.push(CompressedGame {
+                    moves,
+                    filename,
+                    metadata,
+                });
+                file_count += 1;
+                let game_ref = games.last().unwrap();
+                println!(
+                    "  Compressed game {} ({} moves) from {} ({} vs {} on {})",
+                    file_count,
+                    game_ref.moves.len(),
+                    game_ref.filename,
+                    game_ref.metadata.black_player,
+                    game_ref.metadata.white_player,
+                    game_ref.metadata.date
+                );
             }
         }
     }
@@ -271,8 +271,8 @@ pub fn generate_c_header(
     output_path: &str,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let mut header = String::new();
-    header.push_str("#ifndef GAMES_DATA_H\n");
-    header.push_str("#define GAMES_DATA_H\n\n");
+    header.push_str("#ifndef GENERATED_GAMES_DATA_H\n");
+    header.push_str("#define GENERATED_GAMES_DATA_H\n\n");
     header.push_str("#include \"../logic/baduk_platform.h\"\n");
     header.push_str("#include \"../logic/baduk_types.h\"\n\n");
 
@@ -301,14 +301,14 @@ pub fn generate_c_header(
             }
 
             let is_last_move = move_idx == game.moves.len() - 1;
-            header.push_str(",");
+            header.push(',');
 
             if !is_last_move {
-                header.push_str(" ");
+                header.push(' ');
             }
 
             if (move_idx + 1) % 8 == 0 || is_last_move {
-                header.push_str("\n");
+                header.push('\n');
             }
         }
 
@@ -316,11 +316,11 @@ pub fn generate_c_header(
     }
 
     header.push_str("const BadukGameRecord GAMES[] PROGMEM = {\n");
-    for game_idx in 0..games.len() {
+    for (game_idx, game) in games.iter().enumerate() {
         header.push_str(&format!(
             "    {{ GAME_{}_MOVES, {} }},\n",
             game_idx,
-            games[game_idx].moves.len()
+            game.moves.len()
         ));
     }
     header.push_str("};\n\n");

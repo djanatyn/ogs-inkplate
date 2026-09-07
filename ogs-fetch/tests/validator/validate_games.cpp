@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "baduk_engine.h"
-#include "games_data.h"
+#include "generated_games_data.h"
 
 static void print_board(BadukState* state) {
     uint8_t row;

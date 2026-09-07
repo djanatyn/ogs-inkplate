@@ -1,5 +1,5 @@
-#ifndef GAMES_DATA_H
-#define GAMES_DATA_H
+#ifndef GENERATED_GAMES_DATA_H
+#define GENERATED_GAMES_DATA_H
 
 #include "../logic/baduk_platform.h"
 #include "../logic/baduk_types.h"

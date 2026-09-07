@@ -290,8 +290,8 @@ fn compress_games(
     // Generate C header files in output directory
     std::fs::create_dir_all(output_dir)?;
 
-    let games_data_path = format!("{}/games_data.h", output_dir);
-    let games_metadata_path = format!("{}/games_metadata.h", output_dir);
+    let games_data_path = format!("{}/generated_games_data.h", output_dir);
+    let games_metadata_path = format!("{}/generated_games_metadata.h", output_dir);
 
     println!("\nGenerating C header files in: {}", output_dir);
     compression::generate_c_header(&games, &games_data_path)?;

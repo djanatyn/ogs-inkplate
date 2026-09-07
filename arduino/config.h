@@ -27,6 +27,6 @@
 // 0 = minimum brightness (off)
 // 63 = maximum brightness (very bright)
 // Recommended range: 40-50 for comfortable viewing
-#define INITIAL_FRONTLIGHT 45            // Initial frontlight level (0-63)
+#define INITIAL_FRONTLIGHT 5            // Initial frontlight level (0-63)
 
 #endif

@@ -184,8 +184,14 @@ fn validator_snapshots(root: &Path) -> Vec<Vec<String>> {
 
     let games = compress_games_from_directory("tests/fixtures/sgf", BOARD_SIZE as u32, 10)
         .expect("failed to compress SGF fixtures");
-    generate_c_header(&games, generated_dir.join("games_data.h").to_str().unwrap())
-        .expect("failed to generate test games_data.h");
+    generate_c_header(
+        &games,
+        generated_dir
+            .join("generated_games_data.h")
+            .to_str()
+            .unwrap(),
+    )
+    .expect("failed to generate test generated_games_data.h");
 
     let binary = root.join("target/validate_games");
     let compile_status = Command::new("c++")
