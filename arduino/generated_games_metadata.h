@@ -2,7 +2,7 @@
 #define GENERATED_GAMES_METADATA_H
 
 #include "game_metadata.h"
-#include "../logic/baduk_platform.h"
+#include "../engine/baduk_platform.h"
 
 // Metadata strings (stored in PROGMEM)
 const char GAME_0_DATE[] PROGMEM = "2017-09-23";

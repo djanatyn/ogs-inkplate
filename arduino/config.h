@@ -1,7 +1,7 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include "../logic/baduk_types.h"
+#include "../engine/baduk_types.h"
 
 // Display Configuration
 #define MOVE_INTERVAL 8000               // 8 seconds per move (in milliseconds)

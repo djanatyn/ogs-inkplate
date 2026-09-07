@@ -3,7 +3,7 @@
 
 #include "config.h"
 #include "games_metadata.h"
-#include "../logic/baduk_engine.h"
+#include "../engine/baduk_engine.h"
 #include <Arduino.h>
 #include <Inkplate.h>
 

@@ -1,8 +1,8 @@
 #ifndef GENERATED_GAMES_DATA_H
 #define GENERATED_GAMES_DATA_H
 
-#include "../logic/baduk_platform.h"
-#include "../logic/baduk_types.h"
+#include "../engine/baduk_platform.h"
+#include "../engine/baduk_types.h"
 
 // Game 0: 216 moves (from 10069202.sgf)
 const uint16_t GAME_0_MOVES[] PROGMEM = {

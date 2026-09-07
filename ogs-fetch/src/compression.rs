@@ -218,7 +218,7 @@ pub fn generate_metadata_header(
     header.push_str("#ifndef GENERATED_GAMES_METADATA_H\n");
     header.push_str("#define GENERATED_GAMES_METADATA_H\n\n");
     header.push_str("#include \"game_metadata.h\"\n");
-    header.push_str("#include \"../logic/baduk_platform.h\"\n\n");
+    header.push_str("#include \"../engine/baduk_platform.h\"\n\n");
 
     // Generate string constants in PROGMEM
     header.push_str("// Metadata strings (stored in PROGMEM)\n");
@@ -273,8 +273,8 @@ pub fn generate_c_header(
     let mut header = String::new();
     header.push_str("#ifndef GENERATED_GAMES_DATA_H\n");
     header.push_str("#define GENERATED_GAMES_DATA_H\n\n");
-    header.push_str("#include \"../logic/baduk_platform.h\"\n");
-    header.push_str("#include \"../logic/baduk_types.h\"\n\n");
+    header.push_str("#include \"../engine/baduk_platform.h\"\n");
+    header.push_str("#include \"../engine/baduk_types.h\"\n\n");
 
     for (game_idx, game) in games.iter().enumerate() {
         header.push_str(&format!(
