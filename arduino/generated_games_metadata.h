@@ -1,5 +1,5 @@
-#ifndef GAMES_METADATA_H
-#define GAMES_METADATA_H
+#ifndef GENERATED_GAMES_METADATA_H
+#define GENERATED_GAMES_METADATA_H
 
 #include "game_metadata.h"
 #include "../logic/baduk_platform.h"

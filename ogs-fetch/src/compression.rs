@@ -215,8 +215,8 @@ pub fn generate_metadata_header(
     output_path: &str,
 ) -> Result<(), Box<dyn std::error::Error>> {
     let mut header = String::new();
-    header.push_str("#ifndef GAMES_METADATA_H\n");
-    header.push_str("#define GAMES_METADATA_H\n\n");
+    header.push_str("#ifndef GENERATED_GAMES_METADATA_H\n");
+    header.push_str("#define GENERATED_GAMES_METADATA_H\n\n");
     header.push_str("#include \"game_metadata.h\"\n");
     header.push_str("#include \"../logic/baduk_platform.h\"\n\n");
 
