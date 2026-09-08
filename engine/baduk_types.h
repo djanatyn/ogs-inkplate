@@ -11,17 +11,17 @@
 #define BADUK_PASS_MOVE 0xFFFF
 
 struct BadukGameRecord {
-    const uint16_t* moves;
-    uint16_t move_count;
+  const uint16_t *moves;
+  uint16_t move_count;
 };
 
 struct BadukState {
-    uint8_t board[BADUK_BOARD_SIZE][BADUK_BOARD_SIZE];
-    uint16_t game_index;
-    uint16_t move_index;
-    uint16_t move_count;
-    uint8_t last_row;
-    uint8_t last_col;
+  uint8_t board[BADUK_BOARD_SIZE][BADUK_BOARD_SIZE];
+  uint16_t game_index;
+  uint16_t move_index;
+  uint16_t move_count;
+  uint8_t last_row;
+  uint8_t last_col;
 };
 
 #endif
