@@ -3,6 +3,8 @@ ogs-inkplate
 
 display online-go.com games on an inkplate TEMPERA4
 
+- https://djan.org/blog/ogs-inkplate
+
 <p align="center">
   <img src="https://raw.githubusercontent.com/djanatyn/ogs-inkplate/main/screenshot.png" alt="screenshot of baduk game displayed on tempera4"></img>
   <img src="https://raw.githubusercontent.com/djanatyn/ogs-inkplate/main/photo.webp" alt="baduk game displayed on tempera4"></img>
