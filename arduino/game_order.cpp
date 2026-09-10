@@ -1,6 +1,6 @@
 #include "game_order.h"
 
-static void game_order_shuffle(GameOrder *order) {
+static void game_order_shuffle(GameOrder* order) {
   uint16_t i;
 
   for (i = 0; i < GAME_COUNT; i++) {
@@ -20,17 +20,17 @@ static void game_order_shuffle(GameOrder *order) {
   }
 }
 
-void game_order_init(GameOrder *order) {
+void game_order_init(GameOrder* order) {
   randomSeed(esp_random());
   order->index = 0;
   game_order_shuffle(order);
 }
 
-uint16_t game_order_current(GameOrder *order) {
+uint16_t game_order_current(GameOrder* order) {
   return order->games[order->index];
 }
 
-uint8_t game_order_advance(GameOrder *order) {
+uint8_t game_order_advance(GameOrder* order) {
   order->index++;
 
   if (order->index < GAME_COUNT) {

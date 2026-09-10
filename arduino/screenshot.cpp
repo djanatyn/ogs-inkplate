@@ -1,7 +1,8 @@
 #include "screenshot.h"
+
 #include <mbedtls/base64.h>
 
-static void screenshot_write_base64(const uint8_t *data, size_t data_len) {
+static void screenshot_write_base64(const uint8_t* data, size_t data_len) {
   const size_t input_chunk_size = 45;
   uint8_t encoded[65];
   size_t offset;
@@ -24,11 +25,11 @@ static void screenshot_write_base64(const uint8_t *data, size_t data_len) {
     }
 
     encoded[encoded_len] = '\0';
-    Serial.println((char *)encoded);
+    Serial.println((char*)encoded);
   }
 }
 
-void screenshot_dump(Inkplate *display) {
+void screenshot_dump(Inkplate* display) {
   size_t size = E_INK_WIDTH * E_INK_HEIGHT / 8;
 
   Serial.println("SCREENSHOT_BEGIN");
@@ -48,7 +49,7 @@ void screenshot_dump(Inkplate *display) {
   Serial.flush();
 }
 
-void screenshot_check_serial(Inkplate *display) {
+void screenshot_check_serial(Inkplate* display) {
   int ch;
 
   if (!Serial.available()) {

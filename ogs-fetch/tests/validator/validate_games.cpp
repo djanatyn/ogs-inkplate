@@ -1,8 +1,9 @@
-#include "baduk_engine.h"
-#include "generated_games_data.h"
 #include <stdio.h>
 
-static void print_board(BadukState *state) {
+#include "baduk_engine.h"
+#include "generated_games_data.h"
+
+static void print_board(BadukState* state) {
   uint8_t row;
   uint8_t col;
 

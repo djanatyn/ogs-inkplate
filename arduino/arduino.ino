@@ -65,7 +65,7 @@ void loop() {
     // is game over?
     if (baduk_state.move_index >= baduk_state.move_count) {
       Serial.println("game finished, moving to next game...");
-      delay(5000); // Pause before next game
+      delay(5000);  // Pause before next game
 
       if (game_order_advance(&game_order)) {
         load_current_game();

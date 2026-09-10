@@ -11,7 +11,7 @@
 #define BADUK_PASS_MOVE 0xFFFF
 
 struct BadukGameRecord {
-  const uint16_t *moves;
+  const uint16_t* moves;
   uint16_t move_count;
 };
 

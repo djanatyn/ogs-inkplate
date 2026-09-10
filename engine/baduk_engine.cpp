@@ -1,4 +1,5 @@
 #include "baduk_engine.h"
+
 #include "baduk_platform.h"
 
 static uint8_t baduk_other_color(uint8_t color) {
@@ -14,7 +15,7 @@ static uint8_t baduk_on_board(int row, int col) {
          col < BADUK_BOARD_SIZE;
 }
 
-void baduk_reset(BadukState *state) {
+void baduk_reset(BadukState* state) {
   uint8_t row;
   uint8_t col;
 
@@ -31,7 +32,7 @@ void baduk_reset(BadukState *state) {
   state->last_col = BADUK_NO_LAST_MOVE;
 }
 
-uint8_t baduk_load_game(BadukState *state, const BadukGameRecord *games,
+uint8_t baduk_load_game(BadukState* state, const BadukGameRecord* games,
                         uint16_t game_count, uint16_t game_index) {
   BadukGameRecord game;
 
@@ -48,9 +49,9 @@ uint8_t baduk_load_game(BadukState *state, const BadukGameRecord *games,
   return 1;
 }
 
-static uint8_t
-baduk_group_has_liberty(BadukState *state, uint8_t start_row, uint8_t start_col,
-                        uint8_t visited[BADUK_BOARD_SIZE][BADUK_BOARD_SIZE]) {
+static uint8_t baduk_group_has_liberty(
+    const BadukState* state, uint8_t start_row, uint8_t start_col,
+    uint8_t visited[BADUK_BOARD_SIZE][BADUK_BOARD_SIZE]) {
   uint8_t color;
   uint8_t stack_row[BADUK_BOARD_SIZE * BADUK_BOARD_SIZE];
   uint8_t stack_col[BADUK_BOARD_SIZE * BADUK_BOARD_SIZE];
@@ -104,7 +105,7 @@ baduk_group_has_liberty(BadukState *state, uint8_t start_row, uint8_t start_col,
   return 0;
 }
 
-static void baduk_remove_group(BadukState *state, uint8_t start_row,
+static void baduk_remove_group(BadukState* state, uint8_t start_row,
                                uint8_t start_col) {
   uint8_t color;
   uint8_t stack_row[BADUK_BOARD_SIZE * BADUK_BOARD_SIZE];
@@ -152,7 +153,7 @@ static void baduk_remove_group(BadukState *state, uint8_t start_row,
   }
 }
 
-uint8_t baduk_play_move(BadukState *state, uint16_t encoded_move,
+uint8_t baduk_play_move(BadukState* state, uint16_t encoded_move,
                         uint8_t color) {
   uint8_t row;
   uint8_t col;
@@ -217,7 +218,7 @@ uint8_t baduk_play_move(BadukState *state, uint16_t encoded_move,
   return 1;
 }
 
-uint8_t baduk_play_next_move(BadukState *state, const BadukGameRecord *games) {
+uint8_t baduk_play_next_move(BadukState* state, const BadukGameRecord* games) {
   BadukGameRecord game;
   uint16_t encoded_move;
   uint8_t color;
