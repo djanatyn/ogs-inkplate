@@ -2,4 +2,4 @@
 .DS_Store
 *.swp
 ogs-fetch/target/
-test_generated/
+test-artifacts/

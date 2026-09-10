@@ -41,14 +41,11 @@ pub struct ApiPlayer {
 }
 
 pub fn is_valid_game_outcome(outcome: &str) -> bool {
-    // Only include games that completed normally (by points)
-    // Skip: Resignation, Timeout, Disconnection, Cancelled, etc.
     !outcome.contains("Resignation")
         && !outcome.contains("Timeout")
         && !outcome.contains("Disconnect")
         && !outcome.contains("Cancelled")
         && !outcome.contains("Annulled")
-        // Valid outcomes are point-based scores like "6.5 points", "W+24.5", etc.
         && (outcome.contains("points") || outcome.contains("+"))
 }
 

@@ -44,7 +44,7 @@ pub fn parse_sgf_moves(content: &str, board_size: u32) -> Vec<u16> {
     moves
 }
 
-/// Helper to convert sgf-parse Move to our u16 encoding
+/// convert sgf-parse Move to u16 encoding
 fn encode_move_from_lib(mv: &sgf_parse::go::Move, board_size: u32) -> Option<u16> {
     match mv {
         sgf_parse::go::Move::Pass => Some(BADUK_PASS_MOVE),
@@ -57,9 +57,9 @@ fn encode_move_from_lib(mv: &sgf_parse::go::Move, board_size: u32) -> Option<u16
     }
 }
 
-/// Encode SGF coordinates (e.g., "pd") to a single number
+/// encode SGF coordinates (e.g., "pd") to a single number
 /// SGF uses letters a-s (0-18) for 19x19, a-i (0-8) for 9x9
-/// Position = col * board_size + row (where col is first char, row is second char)
+/// position = col * board_size + row (col is first char, row is second char)
 fn encode_move(coords: &str, board_size: u32) -> Option<u16> {
     if coords.len() < 2 {
         return None;
@@ -68,11 +68,11 @@ fn encode_move(coords: &str, board_size: u32) -> Option<u16> {
     let col = coords.chars().next()? as u32;
     let row = coords.chars().nth(1)? as u32;
 
-    // Convert letters to numbers: 'a'=0, 'b'=1, ..., 's'=18
+    // 'a'=0, 'b'=1, 's'=18
     let col_num = col.saturating_sub('a' as u32);
     let row_num = row.saturating_sub('a' as u32);
 
-    // Check if coordinates are valid for the given board size
+    // check if coordinates are valid for the given board size
     if col_num >= board_size || row_num >= board_size {
         return None;
     }
